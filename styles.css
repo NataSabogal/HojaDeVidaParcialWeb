@@ -73,7 +73,6 @@ body {
     min-height: 100vh;
 }
 
-/* ── Sidebar ── */
 .sidebar {
     width: 190px;
     background-color: #ffffff;
@@ -124,4 +123,49 @@ body {
     font-weight: 600;
 }
 
+article.contenido {
+    flex: 1;
+    padding: 28px 32px 40px;
+}
+ 
 
+section.seccion-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+ 
+.seccion-header {
+    background-color: #0d1f3c;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+ 
+.seccion-num {
+    background-color: #c9a84c;
+    color: #0d1f3c;
+    font-weight: 700;
+    font-size: 13px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+.seccion-titulo {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+ 
+.seccion-body {
+    padding: 24px;
+}
+ 
+ 

@@ -21,17 +21,200 @@
         </div>
     </header>
 
-    <div class="sidebar">
-        <div class="sidebar-titulo">
-            <p class="sidebar-nombre">Hoja de Vida</p>
-            <p class="sidebar-sub">sovereign archive</p>
-        </div>
-        <nav>
-            <a href="#" class="sidebar-link activo">Datos Personales</a>
-            <a href="#" class="sidebar-link">Formación Académica</a>
-            <a href="#" class="sidebar-link">Experiencia Laboral</a>
-            <a href="#" class="sidebar-link">Tiempo de Experiencia</a>
-            <a href="#" class="sidebar-link">Certificación</a>
-        </nav>
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-titulo">
+                <p class="sidebar-nombre">Hoja de Vida</p>
+                <p class="sidebar-sub">sovereign archive</p>
+            </div>
+            <nav>
+                <a href="#" class="sidebar-link activo">Datos Personales</a>
+                <a href="#" class="sidebar-link">Formación Académica</a>
+                <a href="#" class="sidebar-link">Experiencia Laboral</a>
+                <a href="#" class="sidebar-link">Tiempo de Experiencia</a>
+                <a href="#" class="sidebar-link">Certificación</a>
+            </nav>
+        </aside>
+
+
+
+        <article class="contenido">
+
+            <section class="seccion-card mb-4">
+
+                <div class="seccion-header">
+                    <span class="seccion-num">1</span>
+                    <span class="seccion-titulo">DATOS PERSONALES</span>
+                </div>
+
+                <div class="seccion-body">
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="campo-label">Primer Apellido</label>
+                            <input type="text" class="campo-input" placeholder="Ej: GONZÁLEZ">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="campo-label">Segundo Apellido (o de casada)</label>
+                            <input type="text" class="campo-input" placeholder="Ej: RODRÍGUEZ">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="campo-label">Nombres</label>
+                            <input type="text" class="campo-input" placeholder="Ej: JUAN CARLOS">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Documento de Identificación</label>
+                            <div class="radio-grupo mb-2">
+                                <input type="radio" name="doc" id="cc">
+                                <label for="cc">C.C</label>
+                                <input type="radio" name="doc" id="ce">
+                                <label for="ce">C.E</label>
+                                <input type="radio" name="doc" id="pas">
+                                <label for="pas">PAS</label>
+                            </div>
+                            <input type="text" class="campo-input" placeholder="Número de documento">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Sexo</label>
+                            <div class="radio-grupo">
+                                <input type="radio" name="sexo" id="fem">
+                                <label for="fem">Femenino</label>
+                                <input type="radio" name="sexo" id="mas">
+                                <label for="mas">Masculino</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Nacionalidad</label>
+                            <div class="radio-grupo">
+                                <input type="radio" name="nac" id="col" checked>
+                                <label for="col">Colombiano</label>
+                                <input type="radio" name="nac" id="ext">
+                                <label for="ext">Extranjero</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">País</label>
+                            <input type="text" class="campo-input" value="COLOMBIA">
+                        </div>
+                    </div>
+
+                    <div class="libreta-box mb-3">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="campo-label">Libreta Militar</label>
+                                <div class="radio-grupo">
+                                    <input type="radio" name="libreta" id="lb1">
+                                    <label for="lb1">1ra Clase</label>
+                                    <input type="radio" name="libreta" id="lb2">
+                                    <label for="lb2">2da Clase</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="campo-label">Número Libreta</label>
+                                <input type="text" class="campo-input" placeholder="Número de libreta">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="campo-label">Distrito Militar (D.M)</label>
+                                <select class="campo-input">
+                                    <option value="">Seleccione distrito...</option>
+                                    <option>Bogotá D.C.</option>
+                                    <option>Medellín</option>
+                                    <option>Cali</option>
+                                    <option>Barranquilla</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="subtitulo-bloque">Lugar y Fecha de Nacimiento</p>
+                    <div class="row mb-3">
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Fecha (D/M/A)</label>
+                            <input type="date" class="campo-input">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">País</label>
+                            <input type="text" class="campo-input" value="COLOMBIA">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Depto</label>
+                            <select class="campo-input">
+                                <option value="">Seleccione departamento...</option>
+                                <option>Antioquia</option>
+                                <option>Cundinamarca</option>
+                                <option>Quindío</option>
+                                <option>Risaralda</option>
+                                <option>Valle del Cauca</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Municipio</label>
+                            <select class="campo-input">
+                                <option value="">Seleccione municipio...</option>
+                                <option>Armenia</option>
+                                <option>Bogotá</option>
+                                <option>Medellín</option>
+                                <option>Cali</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p class="subtitulo-bloque">Dirección de Correspondencia</p>
+                    <div class="row mb-3">
+                        <div class="col-md-8 mb-3">
+                            <label class="campo-label">Dirección (Calle/Av/Num)</label>
+                            <input type="text" class="campo-input" placeholder="Ej: Calle 100 # 15-20, Apto 301">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="campo-label">Teléfono / Celular</label>
+                            <input type="text" class="campo-input" placeholder="+57 300 000 0000">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">País</label>
+                            <input type="text" class="campo-input" value="COLOMBIA">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Depto</label>
+                            <select class="campo-input">
+                                <option value="">Seleccione...</option>
+                                <option>Antioquia</option>
+                                <option>Quindío</option>
+                                <option>Cundinamarca</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Municipio</label>
+                            <select class="campo-input">
+                                <option value="">Seleccione...</option>
+                                <option>Armenia</option>
+                                <option>Bogotá</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Correo Electrónico</label>
+                            <input type="email" class="campo-input" placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <div class="d-flex justify-content-between mt-3 mb-5">
+                <button class="btn-prev">PREVISUALIZAR</button>
+                <button class="btn-sig">SIGUIENTE →</button>
+            </div>
+
+        </article>
+    </div>
     </div>
 
+
+</body>
+
+</html>
