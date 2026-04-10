@@ -69,27 +69,27 @@
                     <p class="campo-label mb-2">Marque el último grado aprobado</p>
 
                     <div class="radio-grupo mb-3">
-                        <label><input type="radio" name="grado"> 1o.</label>
-                        <label><input type="radio" name="grado"> 2o.</label>
-                        <label><input type="radio" name="grado"> 3o.</label>
-                        <label><input type="radio" name="grado"> 4o.</label>
-                        <label><input type="radio" name="grado"> 5o.</label>
-                        <label><input type="radio" name="grado"> 6o.</label>
-                        <label><input type="radio" name="grado"> 7o.</label>
-                        <label><input type="radio" name="grado"> 8o.</label>
-                        <label><input type="radio" name="grado"> 9o.</label>
-                        <label><input type="radio" name="grado"> 10</label>
-                        <label><input type="radio" name="grado"> 11</label>
+                        <label><input type="radio" name="grado" id="g1" value="1"> 1o.</label>
+                        <label><input type="radio" name="grado" id="g2" value="2"> 2o.</label>
+                        <label><input type="radio" name="grado" id="g3" value="3"> 3o.</label>
+                        <label><input type="radio" name="grado" id="g4" value="4"> 4o.</label>
+                        <label><input type="radio" name="grado" id="g5" value="5"> 5o.</label>
+                        <label><input type="radio" name="grado" id="g6" value="6"> 6o.</label>
+                        <label><input type="radio" name="grado" id="g7" value="7"> 7o.</label>
+                        <label><input type="radio" name="grado" id="g8" value="8"> 8o.</label>
+                        <label><input type="radio" name="grado" id="g9" value="9"> 9o.</label>
+                        <label><input type="radio" name="grado" id="g10" value="10"> 10</label>
+                        <label><input type="radio" name="grado" id="g11" value="11"> 11</label>
                     </div>
 
                     <div class="row" mb-3>
                         <div class="col-md-6 mb-3">
                             <label class="campo-label">Título Obtenido</label>
-                            <input type="text" class="campo-input" placeholder="Ej: Bachiller Académico">
+                            <input type="text" class="campo-input" id="titulo-basica" placeholder="Ej: Bachiller Académico">
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="campo-label">Mes de Grado</label>
-                            <select class="campo-input">
+                            <select class="campo-input" id="mes-grado-basica">
                                 <option value="">Seleccione...</option>
                                 <option>Enero</option>
                                 <option>Febrero</option>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="campo-label">Año de Grado</label>
-                            <input type="number" class="campo-input" placeholder="Ej: 2010" min="1950" max="2099">
+                            <input type="number" class="campo-input" id="anio-grado-basica" placeholder="Ej: 2010" min="1950" max="2099">
                         </div>
                     </div>
 
@@ -124,7 +124,7 @@
                             <div class="row">
                                 <div class="col-md-2 mb-3">
                                     <label class="campo-label">Modalidad</label>
-                                    <select class="campo-input">
+                                    <select class="campo-input" id="modalidad-estudio">
                                         <option value="">Seleccione...</option>
                                         <option>TC</option>
                                         <option>TL</option>
@@ -137,11 +137,11 @@
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label class="campo-label">No. Semestres</label>
-                                    <input type="number" class="campo-input" placeholder="Ej: 8" min="1">
+                                    <input type="number" class="campo-input" id="num-semestres" placeholder="Ej: 8" min="1">
                                 </div>
                                 <div class="col-md-1 mb-3">
                                     <label class="campo-label">Graduado</label>
-                                    <select class="campo-input">
+                                    <select class="campo-input" id="graduado-estudio">
                                         <option value="">---</option>
                                         <option>SI</option>
                                         <option>NO</option>
@@ -149,15 +149,15 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Nombre del Título Obtenido</label>
-                                    <input type="text" class="campo-input" placeholder="Ej: Ingeniería de Sistemas">
+                                    <input type="text" class="campo-input" id="titulo-obtenido-superior" placeholder="Ej: Ingeniería de Sistemas">
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label class="campo-label">Terminación (Mes/Año)</label>
-                                    <input type="text" class="campo-input" placeholder="MM/AAAA">
+                                    <input type="text" class="campo-input" id="terminacion-estudio" placeholder="MM/AAAA">
                                 </div>
                                 <div class="col-md-1 mb-3">
                                     <label class="campo-label">No. Tarjeta Prof.</label>
-                                    <input type="text" class="campo-input" placeholder="---">
+                                    <input type="text" class="campo-input" id="tarjeta-profesional" placeholder="---">
                                 </div>
                             </div>
                         </div>
@@ -228,6 +228,7 @@
     </footer>
 
 
+    <script src="scripts.js"></script>
 </body>
 
 </html>

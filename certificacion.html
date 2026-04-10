@@ -90,9 +90,8 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="campo-label">Firma del Servidor Público o Contratista</label>
-                            <div
-                                style="border: 1px dashed #c9a84c; height: 80px; border-radius: 6px; background-color: #fdfcf8;">
-                            </div>
+                            <canvas id="canvas-firma-usuario" class="canvas-firma" height="100"></canvas>
+                            <button type="button" class="btn-prev btn-sm mt-2" id="btn-limpiar-firma-usuario" style="padding: 4px 12px; font-size: 10px;">Limpiar Firma</button>
                         </div>
                     </div>
 
@@ -124,9 +123,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="campo-label">Firma del Jefe de Personal o de Contratos</label>
-                            <div
-                                style="border: 1px dashed #c9a84c; height: 60px; border-radius: 6px; background-color: #fdfcf8;">
-                            </div>
+                            <canvas id="canvas-firma-jefe" class="canvas-firma" height="100"></canvas>
+                            <button type="button" class="btn-prev btn-sm mt-2" id="btn-limpiar-firma-jefe" style="padding: 4px 12px; font-size: 10px;">Limpiar Firma</button>
                         </div>
                     </div>
 
@@ -151,6 +149,7 @@
         </div>
     </footer>
 
+    <script src="scripts.js"></script>
 </body>
 
 </html>
