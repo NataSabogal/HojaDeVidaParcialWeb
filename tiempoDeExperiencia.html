@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header class="topbar">
         <div class="topbar-logo">HV</div>
         <span class="topbar-titulo">FORMATO ÚNICO — HOJA DE VIDA</span>
         <div class="topbar-nav">
-            <span class="nav-activo">PERSONA NATURAL</span>
-            <span class="nav-inactivo">ADMINISTRADOR</span>
+            <a href="index.html" class="nav-activo">PERSONA NATURAL</a>
+            <a href="admin.html" class="nav-inactivo">ADMINISTRADOR</a>
             <div class="topbar-avatar">U</div>
         </div>
     </header>
@@ -33,8 +35,6 @@
                 <a href="certificacion.html" class="sidebar-link">Certificación</a>
             </nav>
         </aside>
-
-
 
         <article class="contenido">
             <div class="row mb-3">
@@ -58,6 +58,57 @@
                 <span class="paso">PASO 5: FIRMA</span>
             </nav>
 
+            <section class="seccion-card mb-4">
+                <div class="seccion-header">
+                    <span class="seccion-num">4</span>
+                    <span class="seccion-titulo">TIEMPO TOTAL DE EXPERIENCIA</span>
+                </div>
+
+                <div class="seccion-body">
+
+                    <p class="campo-label mb-3">Indique el tiempo total de su experiencia laboral en número de años y
+                        meses.</p>
+
+                    <table class="tabla-tiempo">
+                        <thead>
+                            <tr>
+                                <th>Ocupación</th>
+                                <th>Años</th>
+                                <th>Meses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Servidor Público</td>
+                                <td><input type="number" class="campo-input" id="ap-pub" min="0" max="50" placeholder="0"></td>
+                                <td><input type="number" class="campo-input" id="mp-pub" min="0" max="11"
+                                        placeholder="0"></td>
+                            </tr>
+                            <tr>
+                                <td>Empleado Sector Privado</td>
+                                <td><input type="number" class="campo-input" id="ap-priv" min="0" max="50" placeholder="0"></td>
+                                <td><input type="number" class="campo-input" id="mp-priv" min="0" max="11"
+                                        placeholder="0"></td>
+                            </tr>
+                            <tr>
+                                <td>Trabajador Independiente</td>
+                                <td><input type="number" class="campo-input" id="ap-ind" min="0" max="50" placeholder="0"></td>
+                                <td><input type="number" class="campo-input" id="mp-ind" min="0" max="11"
+                                        placeholder="0"></td>
+                            </tr>
+                            <tr class="fila-total">
+                                <td><strong>TOTAL TIEMPO DE EXPERIENCIA</strong></td>
+                                <td><input type="text" class="campo-input" id="total-anios" readonly placeholder="0">
+                                </td>
+                                <td><input type="text" class="campo-input" id="total-meses" readonly placeholder="0">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </section>
+
             <div class="d-flex justify-content-between mt-3 mb-5">
                 <button class="btn-prev" onclick="location.href='experiencia.html'">PREVISUALIZAR</button>
                 <button class="btn-sig" onclick="location.href='certificacion.html'">SIGUIENTE →</button>
@@ -76,6 +127,7 @@
             <a href="#">Políticas</a>
         </div>
     </footer>
-    
+
 </body>
+
 </html>

@@ -14,8 +14,8 @@
         <div class="topbar-logo">HV</div>
         <span class="topbar-titulo">FORMATO ÚNICO — HOJA DE VIDA</span>
         <div class="topbar-nav">
-            <span class="nav-activo">PERSONA NATURAL</span>
-            <span class="nav-inactivo">ADMINISTRADOR</span>
+            <a href="index.html" class="nav-activo">PERSONA NATURAL</a>
+            <a href="admin.html" class="nav-inactivo">ADMINISTRADOR</a>
             <div class="topbar-avatar">U</div>
         </div>
     </header>
@@ -59,6 +59,135 @@
                 <span class="paso">PASO 4: TIEMPO</span>
                 <span class="paso">PASO 5: FIRMA</span>
             </nav>
+
+            <section class="seccion-card mb-4">
+                <div class="seccion-header">
+                    <span class="seccion-num">3</span>
+                    <span class="seccion-titulo">EXPERIENCIA LABORAL</span>
+                </div>
+
+                <div class="seccion-body">
+
+                    <p class="campo-label mb-3">Relacione su experiencia en estricto orden cronológico comenzando por el
+                        empleo actual.</p>
+
+                    <div id="contenedor-experiencias">
+
+                        <div class="libreta-box mb-3">
+                            <p class="subtitulo-bloque">Empleo Actual o Contrato Vigente</p>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="campo-label">Empresa o Entidad</label>
+                                    <input type="text" class="campo-input" placeholder="Nombre de la empresa o entidad">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Tipo</label>
+                                    <div class="radio-grupo mt-1">
+                                        <label><input type="radio" name="tipo1"> Pública</label>
+                                        <label><input type="radio" name="tipo1"> Privada</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">País</label>
+                                    <input type="text" class="campo-input" value="COLOMBIA">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Depto</label>
+                                    <select class="campo-input">
+                                        <option value="">Seleccione...</option>
+                                        <option>Antioquia</option>
+                                        <option>Atlántico</option>
+                                        <option>Bolívar</option>
+                                        <option>Boyacá</option>
+                                        <option>Caldas</option>
+                                        <option>Cundinamarca</option>
+                                        <option>Córdoba</option>
+                                        <option>Huila</option>
+                                        <option>Magdalena</option>
+                                        <option>Nariño</option>
+                                        <option>Norte de Santander</option>
+                                        <option>Quindío</option>
+                                        <option>Risaralda</option>
+                                        <option>Santander</option>
+                                        <option>Tolima</option>
+                                        <option>Valle del Cauca</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Municipio</label>
+                                    <select class="campo-input">
+                                        <option value="">Seleccione...</option>
+                                        <option>Bogotá</option>
+                                        <option>Medellín</option>
+                                        <option>Cali</option>
+                                        <option>Barranquilla</option>
+                                        <option>Cartagena</option>
+                                        <option>Bucaramanga</option>
+                                        <option>Pereira</option>
+                                        <option>Manizales</option>
+                                        <option>Armenia</option>
+                                        <option>Ibagué</option>
+                                        <option>Villavicencio</option>
+                                        <option>Santa Marta</option>
+                                        <option>Pasto</option>
+                                        <option>Cúcuta</option>
+                                        <option>Montería</option>
+                                        <option>Neiva</option>
+                                        <option>Sincelejo</option>
+                                        <option>Popayán</option>
+                                        <option>Valledupar</option>
+                                        <option>Tunja</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Correo Electrónico Entidad</label>
+                                    <input type="email" class="campo-input" placeholder="correo@entidad.com">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Teléfono</label>
+                                    <input type="text" class="campo-input" placeholder="+57 000 000 0000">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Fecha de Ingreso (D/M/A)</label>
+                                    <input type="date" class="campo-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Fecha de Retiro (D/M/A)</label>
+                                    <input type="date" class="campo-input">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Cargo o Contrato Actual</label>
+                                    <input type="text" class="campo-input" placeholder="Ej: Analista de Sistemas">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Dependencia</label>
+                                    <input type="text" class="campo-input" placeholder="Ej: Sistemas e Informática">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Dirección</label>
+                                    <input type="text" class="campo-input" placeholder="Ej: Calle 10 # 5-30">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn-prev" id="btn-agregar-exp">+ Agregar Experiencia Anterior</button>
+
+                </div>
+            </section>
 
             <div class="d-flex justify-content-between mt-3 mb-5">
                 <button class="btn-prev" onclick="location.href='formacion.html'">PREVISUALIZAR</button>

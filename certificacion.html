@@ -15,8 +15,8 @@
         <div class="topbar-logo">HV</div>
         <span class="topbar-titulo">FORMATO ÚNICO — HOJA DE VIDA</span>
         <div class="topbar-nav">
-            <span class="nav-activo">PERSONA NATURAL</span>
-            <span class="nav-inactivo">ADMINISTRADOR</span>
+            <a href="index.html" class="nav-activo">PERSONA NATURAL</a>
+            <a href="admin.html" class="nav-inactivo">ADMINISTRADOR</a>
             <div class="topbar-avatar">U</div>
         </div>
     </header>
@@ -43,7 +43,7 @@
             <div class="row mb-3">
                 <div class="col-md-8">
                     <p class="subtitulo-seccion">Fase final del registro</p>
-                    <h1 class="titulo-pagina">Certificación</h1>
+                    <h1 class="titulo-pagina">Certificación y Firma</h1>
                 </div>
                 <div class="col-md-4">
                     <div class="caja-entidad">
@@ -54,14 +54,89 @@
             </div>
 
             <nav class="stepper mb-4">
-                <span class="paso">PASO 1: DATOS</span>
-                <span class="paso">PASO 2: ACADÉMICO</span>
-                <span class="paso">PASO 3: LABORAL</span>
-                <span class="paso ">PASO 4: TIEMPO</span>
-                <span class="paso activo">PASO 5: FIRMA</span>
+                <a href="index.html" class="paso">PASO 1: DATOS</a>
+                <a href="formacion.html" class="paso">PASO 2: ACADÉMICO</a>
+                <a href="experiencia.html" class="paso">PASO 3: LABORAL</a>
+                <a href="tiempoDeExperiencia.html" class="paso">PASO 4: TIEMPO</a>
+                <a href="certificacion.html" class="paso activo">PASO 5: FIRMA</a>
             </nav>
 
+            <!-- SECCIÓN 5: Firma -->
+            <section class="seccion-card mb-4">
+                <div class="seccion-header">
+                    <span class="seccion-num">5</span>
+                    <span class="seccion-titulo">FIRMA DEL SERVIDOR PÚBLICO O CONTRATISTA</span>
+                </div>
 
+                <div class="seccion-body">
+
+                    <div class="libreta-box mb-4">
+                        <p style="font-style: italic; font-size: 13px; color: #444; line-height: 1.8;">
+                            "Manifiesto bajo la gravedad del juramento que no me encuentro dentro de las causales
+                            de inhabilidad e incompatibilidad del orden constitucional o legal, para ejercer cargos
+                            o empleos públicos o para celebrar contratos de prestación de servicios con la
+                            administración pública. Para todos los efectos legales, certifico que los datos por mí
+                            anotados en el presente Formato Único de Hoja de Vida, son veraces."
+                            <br><strong>(Artículo 5o. de la Ley 190/95)</strong>
+                        </p>
+                        <div class="mt-3">
+                            <label class="radio-grupo">
+                                <input type="checkbox" id="chk-juramento">
+                                <span style="margin-left: 8px;">Acepto y certifico la veracidad de la información</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="campo-label">Firma del Servidor Público o Contratista</label>
+                            <div
+                                style="border: 1px dashed #c9a84c; height: 80px; border-radius: 6px; background-color: #fdfcf8;">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="seccion-card mb-4">
+                <div class="seccion-header">
+                    <span class="seccion-num">6</span>
+                    <span class="seccion-titulo">OBSERVACIONES DEL JEFE DE RECURSOS HUMANOS Y/O CONTRATOS</span>
+                </div>
+
+                <div class="seccion-body">
+
+                    <p class="campo-label mb-3">
+                        Certifico que la información aquí suministrada ha sido constatada frente a los documentos
+                        que han sido presentados como soporte.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="campo-label">Observaciones</label>
+                            <textarea class="campo-input" rows="4"
+                                style="resize: vertical; border: 1px solid #dee2e6; border-radius: 4px; padding: 8px;"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="campo-label">Nombre del Jefe de Personal o de Contratos</label>
+                            <input type="text" class="campo-input" placeholder="Nombre completo">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="campo-label">Firma del Jefe de Personal o de Contratos</label>
+                            <div
+                                style="border: 1px dashed #c9a84c; height: 60px; border-radius: 6px; background-color: #fdfcf8;">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <div class="d-flex justify-content-between mt-3 mb-5">
+                <button class="btn-prev" onclick="location.href='tiempoDeExperiencia.html'">← ANTERIOR</button>
+                <button class="btn-enviar">✔ ENVIAR HOJA DE VIDA</button>
+            </div>
         </article>
 
     </div>

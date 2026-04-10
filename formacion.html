@@ -14,8 +14,8 @@
         <div class="topbar-logo">HV</div>
         <span class="topbar-titulo">FORMATO ÚNICO — HOJA DE VIDA</span>
         <div class="topbar-nav">
-            <span class="nav-activo">PERSONA NATURAL</span>
-            <span class="nav-inactivo">ADMINISTRADOR</span>
+            <a href="index.html" class="nav-activo">PERSONA NATURAL</a>
+            <a href="admin.html" class="nav-inactivo">ADMINISTRADOR</a>
             <div class="topbar-avatar">U</div>
         </div>
     </header>
@@ -58,118 +58,157 @@
                 <span class="paso">PASO 5: FIRMA</span>
             </nav>
 
-            <div class="seccion-header">
-                    <span class="seccion-num">1</span>
+            <section class="seccion-card mb-4">
+                <div class="seccion-header">
+                    <span class="seccion-num">2</span>
                     <span class="seccion-titulo">Formación Académica</span>
                 </div>
 
-            <div class="seccion-body">
-                <p class="subtitulo-bloque">Educación Básica y Media</p>
+                <div class="seccion-body">
+                    <p class="subtitulo-bloque">Educación Básica y Media</p>
+                    <p class="campo-label mb-2">Marque el último grado aprobado</p>
 
-                <div class="radio-grupo mb-3">
-                    <label><input type="radio" name="grado"> 1o.</label>
-                    <label><input type="radio" name="grado"> 2o.</label>
-                    <!-- ... hasta 11 -->
+                    <div class="radio-grupo mb-3">
+                        <label><input type="radio" name="grado"> 1o.</label>
+                        <label><input type="radio" name="grado"> 2o.</label>
+                        <label><input type="radio" name="grado"> 3o.</label>
+                        <label><input type="radio" name="grado"> 4o.</label>
+                        <label><input type="radio" name="grado"> 5o.</label>
+                        <label><input type="radio" name="grado"> 6o.</label>
+                        <label><input type="radio" name="grado"> 7o.</label>
+                        <label><input type="radio" name="grado"> 8o.</label>
+                        <label><input type="radio" name="grado"> 9o.</label>
+                        <label><input type="radio" name="grado"> 10</label>
+                        <label><input type="radio" name="grado"> 11</label>
+                    </div>
+
+                    <div class="row" mb-3>
+                        <div class="col-md-6 mb-3">
+                            <label class="campo-label">Título Obtenido</label>
+                            <input type="text" class="campo-input" placeholder="Ej: Bachiller Académico">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Mes de Grado</label>
+                            <select class="campo-input">
+                                <option value="">Seleccione...</option>
+                                <option>Enero</option>
+                                <option>Febrero</option>
+                                <option>Marzo</option>
+                                <option>Abril</option>
+                                <option>Mayo</option>
+                                <option>Junio</option>
+                                <option>Julio</option>
+                                <option>Agosto</option>
+                                <option>Septiembre</option>
+                                <option>Octubre</option>
+                                <option>Noviembre</option>
+                                <option>Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="campo-label">Año de Grado</label>
+                            <input type="number" class="campo-input" placeholder="Ej: 2010" min="1950" max="2099">
+                        </div>
+                    </div>
+
+                    <p class="subtitulo-bloque mt-4">Educación Superior</p>
+                    <p class="campo-label mb-3">
+                        TC: Técnica &nbsp;|&nbsp; TL: Tecnológica &nbsp;|&nbsp; TE: Tecnológica Especializada
+                        &nbsp;|&nbsp;
+                        UN: Universitaria &nbsp;|&nbsp; ES: Especialización &nbsp;|&nbsp; MG: Maestría &nbsp;|&nbsp;
+                        DOC: Doctorado
+                    </p>
+
+                    <div id="contenedor-estudios">
+                        <div class="libreta-box mb-3">
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="campo-label">Modalidad</label>
+                                    <select class="campo-input">
+                                        <option value="">Seleccione...</option>
+                                        <option>TC</option>
+                                        <option>TL</option>
+                                        <option>TE</option>
+                                        <option>UN</option>
+                                        <option>ES</option>
+                                        <option>MG</option>
+                                        <option>DOC</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="campo-label">No. Semestres</label>
+                                    <input type="number" class="campo-input" placeholder="Ej: 8" min="1">
+                                </div>
+                                <div class="col-md-1 mb-3">
+                                    <label class="campo-label">Graduado</label>
+                                    <select class="campo-input">
+                                        <option value="">---</option>
+                                        <option>SI</option>
+                                        <option>NO</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="campo-label">Nombre del Título Obtenido</label>
+                                    <input type="text" class="campo-input" placeholder="Ej: Ingeniería de Sistemas">
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="campo-label">Terminación (Mes/Año)</label>
+                                    <input type="text" class="campo-input" placeholder="MM/AAAA">
+                                </div>
+                                <div class="col-md-1 mb-3">
+                                    <label class="campo-label">No. Tarjeta Prof.</label>
+                                    <input type="text" class="campo-input" placeholder="---">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-prev mb-4" id="btn-agregar-estudio">+ Agregar Estudio</button>
+
+                    <p class="subtitulo-bloque mt-4">Idiomas</p>
+                    <p class="campo-label mb-3">Especifique los idiomas diferentes al español. R: Regular &nbsp;|&nbsp;
+                        B: Bien &nbsp;|&nbsp; MB: Muy Bien</p>
+
+                    <div id="contenedor-idiomas">
+                        <div class="libreta-box mb-3">
+                            <div class="row align-items-end">
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Idioma</label>
+                                    <input type="text" class="campo-input" placeholder="Ej: Inglés">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Lo Habla</label>
+                                    <div class="radio-grupo mt-1">
+                                        <label><input type="radio" name="habla1"> R</label>
+                                        <label><input type="radio" name="habla1"> B</label>
+                                        <label><input type="radio" name="habla1"> MB</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Lo Lee</label>
+                                    <div class="radio-grupo mt-1">
+                                        <label><input type="radio" name="lee1"> R</label>
+                                        <label><input type="radio" name="lee1"> B</label>
+                                        <label><input type="radio" name="lee1"> MB</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="campo-label">Lo Escribe</label>
+                                    <div class="radio-grupo mt-1">
+                                        <label><input type="radio" name="escribe1"> R</label>
+                                        <label><input type="radio" name="escribe1"> B</label>
+                                        <label><input type="radio" name="escribe1"> MB</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-prev" id="btn-agregar-idioma">+ Agregar Idioma</button>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="campo-label">Título Obtenido</label>
-                        <input type="text" class="campo-input">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="campo-label">Mes de Grado</label>
-                        <input type="text" class="campo-input">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="campo-label">Año de Grado</label>
-                        <input type="text" class="campo-input">
-                    </div>
-                </div>
+            </section>
 
-                <p class="subtitulo-bloque mt-4">Educación Superior</p>
-
-                <div id="contenedor-estudios">
-                    <!-- Una tarjeta por cada estudio -->
-                    <div class="libreta-box mb-3">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="campo-label">Modalidad</label>
-                                <select class="campo-input">
-                                    <option>TC</option>
-                                    <option>TL</option>
-                                    <option>UN</option>
-                                    <option>ES</option>
-                                    <option>MG</option>
-                                    <option>DOC</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="campo-label">No. Semestres</label>
-                                <input type="number" class="campo-input">
-                            </div>
-                            <div class="col-md-1">
-                                <label class="campo-label">Graduado</label>
-                                <select class="campo-input">
-                                    <option>SI</option>
-                                    <option>NO</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="campo-label">Nombre del Título</label>
-                                <input type="text" class="campo-input">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="campo-label">Terminación (Mes/Año)</label>
-                                <input type="text" class="campo-input" placeholder="MM/AAAA">
-                            </div>
-                            <div class="col-md-1">
-                                <label class="campo-label">No. Tarjeta</label>
-                                <input type="text" class="campo-input">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-prev" id="btn-agregar-estudio">+ Agregar Estudio</button>
-
-                <p class="subtitulo-bloque mt-4">Idiomas</p>
-
-                <div id="contenedor-idiomas">
-                    <div class="row mb-2 align-items-end">
-                        <div class="col-md-3">
-                            <label class="campo-label">Idioma</label>
-                            <input type="text" class="campo-input" placeholder="Ej: Inglés">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="campo-label">Lo Habla</label>
-                            <div class="radio-grupo">
-                                <label><input type="radio" name="habla1"> R</label>
-                                <label><input type="radio" name="habla1"> B</label>
-                                <label><input type="radio" name="habla1"> MB</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="campo-label">Lo Lee</label>
-                            <div class="radio-grupo">
-                                <label><input type="radio" name="lee1"> R</label>
-                                <label><input type="radio" name="lee1"> B</label>
-                                <label><input type="radio" name="lee1"> MB</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="campo-label">Lo Escribe</label>
-                            <div class="radio-grupo">
-                                <label><input type="radio" name="escribe1"> R</label>
-                                <label><input type="radio" name="escribe1"> B</label>
-                                <label><input type="radio" name="escribe1"> MB</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-prev" id="btn-agregar-idioma">+ Agregar Idioma</button>
-            </div>
             <div class="d-flex justify-content-between mt-3 mb-5">
                 <button class="btn-prev" onclick="location.href='datosPersonales.html'">PREVISUALIZAR</button>
                 <button class="btn-sig" onclick="location.href='experiencia.html'">SIGUIENTE →</button>

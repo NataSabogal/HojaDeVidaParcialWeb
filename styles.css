@@ -288,6 +288,66 @@ section.seccion-card {
     margin-bottom: 14px;
 }
 
+.tabla-tiempo {
+    width: 100%;
+    border-collapse: collapse;
+}
+ 
+.tabla-tiempo thead tr {
+    background-color: #0d1f3c;
+}
+ 
+.tabla-tiempo thead th {
+    padding: 12px 18px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #ffffff;
+    text-align: left;
+}
+ 
+.tabla-tiempo tbody tr {
+    border-bottom: 1px solid #dee2e6;
+}
+ 
+.tabla-tiempo tbody tr:hover {
+    background-color: #fdfcf8;
+}
+ 
+.tabla-tiempo td {
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #2d2d2d;
+    vertical-align: middle;
+}
+ 
+.tabla-tiempo td:first-child {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0d1f3c;
+    width: 55%;
+}
+ 
+.tabla-tiempo .fila-total {
+    background-color: #fdf8ee;
+    border-top: 2px solid #c9a84c;
+    border-bottom: 2px solid #c9a84c;
+}
+ 
+.tabla-tiempo .fila-total td:first-child {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #c9a84c;
+}
+ 
+.tabla-tiempo .fila-total .campo-input {
+    border-bottom-color: #c9a84c;
+    color: #0d1f3c;
+    font-weight: 700;
+}
 
 .btn-prev {
     border: 1.5px solid #c9a84c;
@@ -319,6 +379,51 @@ section.seccion-card {
 
 .btn-sig:hover {
     background-color: #1a3561;
+}
+
+
+.btn-enviar {
+    background-color: #c9a84c;
+    border: none;
+    color: #0d1f3c;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 12px 36px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-enviar:hover {
+    background-color: #b8943e;
+}
+
+.badge-estado {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.badge-diligenciada {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+}
+
+.badge-aceptada {
+    background-color: #d1e7dd;
+    color: #0a5c36;
+    border: 1px solid #198754;
+}
+
+.badge-rechazada {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #dc3545;
 }
 
 footer.pie-pagina {
