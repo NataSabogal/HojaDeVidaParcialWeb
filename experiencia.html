@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Experiencia Laboral</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -35,8 +36,6 @@
                 <a href="certificacion.html" class="sidebar-link">Certificación</a>
             </nav>
         </aside>
-
-
 
         <article class="contenido">
             <div class="row mb-3">
@@ -73,13 +72,14 @@
 
                     <div id="contenedor-experiencias">
 
-                        <div class="libreta-box mb-3">
+                        <div class="libreta-box mb-3 position-relative">
                             <p class="subtitulo-bloque">Empleo Actual o Contrato Vigente</p>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="campo-label">Empresa o Entidad</label>
-                                    <input type="text" class="campo-input" id="empresa-actual" placeholder="Nombre de la empresa o entidad">
+                                    <input type="text" class="campo-input" id="empresa-actual"
+                                        placeholder="Nombre de la empresa o entidad">
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="campo-label">Tipo</label>
@@ -146,14 +146,16 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Correo Electrónico Entidad</label>
-                                    <input type="email" class="campo-input" id="email-entidad" placeholder="correo@entidad.com">
+                                    <input type="email" class="campo-input" id="email-entidad"
+                                        placeholder="correo@entidad.com">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Teléfono</label>
-                                    <input type="text" class="campo-input" id="telefono-entidad" placeholder="+57 000 000 0000">
+                                    <input type="text" class="campo-input" id="telefono-entidad"
+                                        placeholder="+57 000 000 0000">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Fecha de Ingreso (D/M/A)</label>
@@ -168,18 +170,24 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Cargo o Contrato Actual</label>
-                                    <input type="text" class="campo-input" id="cargo-actual" placeholder="Ej: Analista de Sistemas">
+                                    <input type="text" class="campo-input" id="cargo-actual"
+                                        placeholder="Ej: Analista de Sistemas">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Dependencia</label>
-                                    <input type="text" class="campo-input" id="dependencia-actual" placeholder="Ej: Sistemas e Informática">
+                                    <input type="text" class="campo-input" id="dependencia-actual"
+                                        placeholder="Ej: Sistemas e Informática">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="campo-label">Dirección</label>
-                                    <input type="text" class="campo-input" id="direccion-entidad" placeholder="Ej: Calle 10 # 5-30">
+                                    <input type="text" class="campo-input" id="direccion-entidad"
+                                        placeholder="Ej: Calle 10 # 5-30">
                                 </div>
                             </div>
 
+                            <button class="btn-trash position-absolute top-0 end-0 m-2 border-0 bg-transparent">
+                                <i class="bi bi-trash text-danger"></i>
+                            </button>
                         </div>
 
                     </div>

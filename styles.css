@@ -270,6 +270,7 @@ section.seccion-card {
 }
 
 .libreta-box {
+    position: relative;
     border: 1px solid #dee2e6;
     border-left: 3px solid #c9a84c;
     border-radius: 0 6px 6px 0;
@@ -480,7 +481,6 @@ footer.pie-pagina {
     text-decoration: underline;
 }
 
-/* Firma Digital */
 .canvas-firma {
     border: 1px dashed #c9a84c;
     background-color: #fdfcf8;
@@ -488,5 +488,5 @@ footer.pie-pagina {
     cursor: crosshair;
     width: 100%;
     display: block;
-    touch-action: none; /* Previene scroll en móviles mientras se firma */
+    touch-action: none;
 }
