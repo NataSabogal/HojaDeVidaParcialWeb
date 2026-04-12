@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiempo de Experiencia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -61,57 +62,54 @@
             <section class="seccion-card mb-4">
                 <div class="seccion-header">
                     <span class="seccion-num">4</span>
-                    <span class="seccion-titulo">TIEMPO TOTAL DE EXPERIENCIA</span>
+                    <span class="seccion-titulo">TOTAL TIEMPO DE EXPERIENCIA</span>
                 </div>
 
                 <div class="seccion-body">
+                    <p class="campo-label mb-3">INDIQUE EL TIEMPO TOTAL DE SU EXPERIENCIA LABORAL EN NÚMERO DE AÑOS Y MESES.</p>
 
-                    <p class="campo-label mb-3">Indique el tiempo total de su experiencia laboral en número de años y
-                        meses.</p>
-
-                    <table class="tabla-tiempo">
-                        <thead>
-                            <tr>
-                                <th>Ocupación</th>
-                                <th>Años</th>
-                                <th>Meses</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Servidor Público</td>
-                                <td><input type="number" class="campo-input" id="ap-pub" min="0" max="50" placeholder="0"></td>
-                                <td><input type="number" class="campo-input" id="mp-pub" min="0" max="11"
-                                        placeholder="0"></td>
-                            </tr>
-                            <tr>
-                                <td>Empleado Sector Privado</td>
-                                <td><input type="number" class="campo-input" id="ap-priv" min="0" max="50" placeholder="0"></td>
-                                <td><input type="number" class="campo-input" id="mp-priv" min="0" max="11"
-                                        placeholder="0"></td>
-                            </tr>
-                            <tr>
-                                <td>Trabajador Independiente</td>
-                                <td><input type="number" class="campo-input" id="ap-ind" min="0" max="50" placeholder="0"></td>
-                                <td><input type="number" class="campo-input" id="mp-ind" min="0" max="11"
-                                        placeholder="0"></td>
-                            </tr>
-                            <tr class="fila-total">
-                                <td><strong>TOTAL TIEMPO DE EXPERIENCIA</strong></td>
-                                <td><input type="text" class="campo-input" id="total-anios" readonly placeholder="0">
-                                </td>
-                                <td><input type="text" class="campo-input" id="total-meses" readonly placeholder="0">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th rowspan="2">OCUPACIÓN</th>
+                                    <th colspan="2">TIEMPO TOTAL</th>
+                                </tr>
+                                <tr>
+                                    <th>AÑOS</th>
+                                    <th>MESES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">SERVIDOR PÚBLICO</td>
+                                    <td><input type="number" class="campo-input text-center" id="ap-pub" min="0" placeholder="0"></td>
+                                    <td><input type="number" class="campo-input text-center" id="mp-pub" min="0" max="11" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">EMPLEADO DEL SECTOR PRIVADO</td>
+                                    <td><input type="number" class="campo-input text-center" id="ap-priv" min="0" placeholder="0"></td>
+                                    <td><input type="number" class="campo-input text-center" id="mp-priv" min="0" max="11" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">TRABAJADOR INDEPENDIENTE</td>
+                                    <td><input type="number" class="campo-input text-center" id="ap-ind" min="0" placeholder="0"></td>
+                                    <td><input type="number" class="campo-input text-center" id="mp-ind" min="0" max="11" placeholder="0"></td>
+                                </tr>
+                                <tr class="table-secondary fw-bold">
+                                    <td class="text-start">TOTAL TIEMPO EXPERIENCIA</td>
+                                    <td><input type="number" class="campo-input text-center fw-bold" id="total-anios" readonly disabled></td>
+                                    <td><input type="number" class="campo-input text-center fw-bold" id="total-meses" readonly disabled></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
             <div class="d-flex justify-content-between mt-3 mb-5">
-                <button class="btn-prev" onclick="location.href='experiencia.html'">PREVISUALIZAR</button>
-                <button class="btn-sig" onclick="location.href='certificacion.html'">SIGUIENTE →</button>
+                <button class="btn-prev">PREVISUALIZAR</button>
+                <button class="btn-sig">SIGUIENTE →</button>
             </div>
 
         </article>

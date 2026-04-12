@@ -490,3 +490,12 @@ footer.pie-pagina {
     display: block;
     touch-action: none;
 }
+
+.btn-trash {
+    transition: transform 0.2s ease;
+}
+
+.btn-trash:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}

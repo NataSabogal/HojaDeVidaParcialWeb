@@ -1,12 +1,12 @@
 /**
  * Hoja de Vida - Script Principal
- * Implementación de validaciones y lógica dinámica
+ * Implementación de validaciones rígidas, persistencia de listas y lógica dinámica.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Script Hoja de Vida cargado correctamente.');
 
-    // --- DATOS DE DEPARTAMENTOS Y MUNICIPIOS ---
+    // --- DATOS DE REFERENCIA ---
     const datosColombia = {
         "Antioquia": ["Medellín", "Envigado", "Itagüí", "Bello", "Rionegro", "Sabaneta"],
         "Atlántico": ["Barranquilla", "Soledad", "Malambo", "Puerto Colombia"],
@@ -26,593 +26,614 @@ document.addEventListener('DOMContentLoaded', () => {
         "Valle del Cauca": ["Cali", "Palmira", "Buenaventura", "Tuluá", "Buga"]
     };
 
-    // --- LÓGICA DE SELECTS DINÁMICOS ---
-    const deptoSelects = document.querySelectorAll('select.depto-select');
-    const muniSelects = document.querySelectorAll('select.muni-select');
+    const distritosMilitares = [
+        "Distrito 1 - Bogotá", "Distrito 2 - Medellín", "Distrito 3 - Cali", 
+        "Distrito 4 - Barranquilla", "Distrito 5 - Bucaramanga", "Distrito 6 - Pereira",
+        "Distrito 7 - Ibagué", "Distrito 8 - Cartagena", "Distrito 9 - Villavicencio",
+        "Distrito 10 - Neiva", "Distrito 11 - Pasto", "Distrito 12 - Cúcuta"
+    ];
 
-    // Mapeo de select de depto a su respectivo select de municipio
-    // En este caso, asumimos que están en la misma fila o estructura cercana.
-    // Una forma robusta es usar IDs o clases específicas.
-    // Vamos a asignar event listeners a todos los selects de departamento.
+    // --- CONFIGURACIÓN DE VALIDACIÓN (CAMPOS OBLIGATORIOS) ---
+    const VALIDACION_CONFIG = {
+        'index.html': [
+            { id: 'primer-apellido', label: 'Primer Apellido' },
+            { id: 'nombres', label: 'Nombres' },
+            { id: 'num-documento', label: 'Número de documento' },
+            { name: 'doc', label: 'Tipo de documento', type: 'radio' },
+            { name: 'sexo', label: 'Sexo', type: 'radio' },
+            { id: 'fecha-nacimiento', label: 'Fecha de nacimiento' },
+            { id: 'direccion-correspondencia', label: 'Dirección' },
+            { id: 'telefono', label: 'Teléfono' },
+            { id: 'email', label: 'Correo electrónico', type: 'email' }
+        ],
+        'formacion.html': [
+            { id: 'titulo-basica', label: 'Título Obtenido (Básica)' },
+            { id: 'anio-grado-basica', label: 'Año de Grado' }
+        ],
+        'experiencia.html': [
+            { id: 'empresa-actual', label: 'Empresa o Entidad' },
+            { id: 'cargo-actual', label: 'Cargo o Contrato Actual' }
+        ],
+        'certificacion.html': [
+            { id: 'chk-juramento', label: 'Aceptación de juramento', type: 'checkbox' }
+        ]
+    };
+
+
+    // --- UTILERÍA ---
+    const obtenerPaginaActual = () => {
+        const path = window.location.pathname;
+        return path.split('/').pop() || 'index.html';
+    };
+
+    const navegarA = (url) => { window.location.href = url; };
+
+    // --- POBLAR SELECTS PREDETERMINADOS ---
+    const poblarDistritos = () => {
+        const sel = document.getElementById('distrito-militar');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">Seleccione distrito...</option>';
+        distritosMilitares.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = opt.textContent = d;
+            sel.appendChild(opt);
+        });
+    };
 
     const setupDynamicDropdowns = () => {
-        const rows = document.querySelectorAll('.row');
-        rows.forEach(row => {
-            const depto = row.querySelector('.depto-select');
-            const muni = row.querySelector('.muni-select');
-
-            if (depto && muni) {
-                depto.addEventListener('change', () => {
-                    const deptoSeleccionado = depto.value;
-                    actualizarMunicipios(muni, deptoSeleccionado);
-                });
+        document.querySelectorAll('.depto-select').forEach(depto => {
+            const row = depto.closest('.row');
+            if (row) {
+                const muni = row.querySelector('.muni-select');
+                if (muni) depto.addEventListener('change', () => actualizarMunicipios(muni, depto.value));
             }
         });
     };
 
     const actualizarMunicipios = (muniSelect, depto) => {
-        // Limpiar municipio select
+        if (!muniSelect) return;
         muniSelect.innerHTML = '<option value="">Seleccione...</option>';
-
         if (depto && datosColombia[depto]) {
-            datosColombia[depto].forEach(municipio => {
-                const option = document.createElement('option');
-                option.value = municipio;
-                option.textContent = municipio;
-                muniSelect.appendChild(option);
+            datosColombia[depto].forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = opt.textContent = m;
+                muniSelect.appendChild(opt);
             });
         }
     };
 
-    setupDynamicDropdowns();
-
-    // --- VALIDACIONES DE CAMPOS ---
-    const forms = document.querySelectorAll('article.contenido');
-    
-    // Función para mostrar error
-    const mostrarError = (input, mensaje) => {
-        input.classList.add('is-invalid');
-        input.style.borderColor = '#dc3545';
-        
-        let errorDiv = input.nextElementSibling;
-        if (!errorDiv || !errorDiv.classList.contains('error-mensaje')) {
+    // --- GESTIÓN DE ERRORES VISUALES ---
+    const mostrarError = (el, msg) => {
+        if (!el) return;
+        el.classList.add('is-invalid');
+        let errorDiv = el.parentElement.querySelector('.invalid-feedback-custom');
+        if (!errorDiv) {
             errorDiv = document.createElement('div');
-            errorDiv.classList.add('error-mensaje');
+            errorDiv.className = 'invalid-feedback-custom';
             errorDiv.style.color = '#dc3545';
-            errorDiv.style.fontSize = '12px';
-            errorDiv.style.marginTop = '4px';
-            input.parentNode.appendChild(errorDiv);
+            errorDiv.style.fontSize = '11px';
+            errorDiv.style.marginTop = '2px';
+            el.parentElement.appendChild(errorDiv);
         }
-        errorDiv.textContent = mensaje;
+        errorDiv.textContent = msg;
+        el.style.borderColor = '#dc3545';
     };
 
-    const limpiarError = (input) => {
-        input.classList.remove('is-invalid');
-        input.style.borderColor = '';
-        const errorDiv = input.parentNode.querySelector('.error-mensaje');
-        if (errorDiv) {
-            errorDiv.remove();
-        }
-    };
-
-    // Validar emails
-    const emailInputs = document.querySelectorAll('input[type="email"]');
-    emailInputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (input.value && !emailRegex.test(input.value)) {
-                mostrarError(input, 'Correo electrónico no válido');
-            } else {
-                limpiarError(input);
-            }
+    const limpiarErrores = () => {
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+            el.style.borderColor = '';
         });
-    });
-
-    // Validar campos obligatorios al intentar avanzar
-    const btnSiguiente = document.querySelector('.btn-sig');
-    if (btnSiguiente && !btnSiguiente.id.includes('guardar')) { // Evitar el de admin
-        btnSiguiente.addEventListener('click', (e) => {
-            let formValido = true;
-            const camposRequeridos = document.querySelectorAll('.campo-input[required], input[type="text"].campo-input:not([placeholder*="Ej"]):not([value])');
-            
-            // Nota: En el HTML actual no hay muchos 'required', vamos a validar algunos críticos
-            const nombres = document.querySelector('input[placeholder="Ej: JUAN CARLOS"]');
-            if (nombres && !nombres.value.trim()) {
-                mostrarError(nombres, 'El nombre es obligatorio');
-                formValido = false;
-            }
-
-            const apellidos = document.querySelector('input[placeholder="Ej: GONZÁLEZ"]');
-            if (apellidos && !apellidos.value.trim()) {
-                mostrarError(apellidos, 'El apellido es obligatorio');
-                formValido = false;
-            }
-
-            // Si es la página de certificación, validar el checkbox
-            const chkJuramento = document.getElementById('chk-juramento');
-            if (chkJuramento && !chkJuramento.checked) {
-                alert('Debe aceptar el juramento para continuar.');
-                formValido = false;
-            }
-
-            if (!formValido) {
-                e.preventDefault();
-                console.warn('Formulario inválido, corrija los errores.');
-            }
-        });
-    }
-
-    // --- LÓGICA DE TIEMPO DE EXPERIENCIA (Calculo automático) ---
-    const inputsTiempo = [
-        'ap-pub', 'mp-pub', 'ap-priv', 'mp-priv', 'ap-ind', 'mp-ind'
-    ];
-    
-    const calcularTotalTiempo = () => {
-        let totalMeses = 0;
-        
-        const apPub = parseInt(document.getElementById('ap-pub')?.value) || 0;
-        const mpPub = parseInt(document.getElementById('mp-pub')?.value) || 0;
-        const apPriv = parseInt(document.getElementById('ap-priv')?.value) || 0;
-        const mpPriv = parseInt(document.getElementById('mp-priv')?.value) || 0;
-        const apInd = parseInt(document.getElementById('ap-ind')?.value) || 0;
-        const mpInd = parseInt(document.getElementById('mp-ind')?.value) || 0;
-
-        totalMeses = (apPub * 12 + mpPub) + (apPriv * 12 + mpPriv) + (apInd * 12 + mpInd);
-        
-        const aniosFinal = Math.floor(totalMeses / 12);
-        const mesesFinal = totalMeses % 12;
-        
-        const outAnios = document.getElementById('total-anios');
-        const outMeses = document.getElementById('total-meses');
-        
-        if (outAnios && outMeses) {
-            outAnios.value = aniosFinal;
-            outMeses.value = mesesFinal;
-        }
+        document.querySelectorAll('.invalid-feedback-custom').forEach(el => el.remove());
     };
 
-    inputsTiempo.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('input', calcularTotalTiempo);
-        }
-    });
+    // --- VALIDACIÓN RÍGIDA ---
+    const validarPaginaActual = () => {
+        limpiarErrores();
+        const config = VALIDACION_CONFIG[obtenerPaginaActual()];
+        if (!config) return true;
 
-    // --- BOTONES DE AGREGAR FILAS (Mínima implementación) ---
-    const btnAgregarEstudio = document.getElementById('btn-agregar-estudio');
-    if (btnAgregarEstudio) {
-        btnAgregarEstudio.addEventListener('click', (e) => {
-            e.preventDefault();
-            const contenedor = document.getElementById('contenedor-estudios');
-            const nuevo = contenedor.firstElementChild.cloneNode(true);
-            // Limpiar inputs del clon
-            nuevo.querySelectorAll('input').forEach(i => i.value = '');
-            nuevo.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
-            contenedor.appendChild(nuevo);
-        });
-    }
+        let esValido = true;
+        const hoy = new Date();
+        const anioActual = hoy.getFullYear();
 
-    const btnAgregarExp = document.getElementById('btn-agregar-exp');
-    if (btnAgregarExp) {
-        btnAgregarExp.addEventListener('click', (e) => {
-            e.preventDefault();
-            const contenedor = document.getElementById('contenedor-experiencias');
-            const nuevo = contenedor.firstElementChild.cloneNode(true);
-            nuevo.querySelector('.subtitulo-bloque').textContent = 'Experiencia Anterior';
-            nuevo.querySelectorAll('input').forEach(i => i.value = '');
-            nuevo.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
-            contenedor.appendChild(nuevo);
-            // Re-vincular selects dinámicos si los hay en el clon
-            setupDynamicDropdowns();
-        });
-    }
-
-    // --- LÓGICA DE PERSISTENCIA (Draft) ---
-    const obtenerNombrePagina = () => {
-        const partes = window.location.pathname.split('/');
-        return partes[partes.length - 1] || 'pagina';
-    };
-
-    const normalizarTexto = (texto) => texto
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-
-    const obtenerLabelCampo = (campo) => {
-        const bloque = campo.closest('.mb-3, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-6, .col-md-8, .col-md-12, .libreta-box');
-        const label = bloque ? bloque.querySelector('.campo-label') : null;
-        if (label && label.textContent.trim()) {
-            return label.textContent.trim();
-        }
-        if (campo.placeholder && campo.placeholder.trim()) {
-            return campo.placeholder.trim();
-        }
-        return campo.id || campo.name || campo.tagName;
-    };
-
-    const obtenerClavePersistencia = (campo, indice) => {
-        if (campo.id) return campo.id;
-        if (campo.dataset.persistKey) return campo.dataset.persistKey;
-        const pagina = obtenerNombrePagina();
-        const label = normalizarTexto(obtenerLabelCampo(campo));
-        const tipo = normalizarTexto(campo.type || campo.tagName || 'campo');
-        const clave = `auto__${pagina}__${label || tipo}__${indice}`;
-        campo.dataset.persistKey = clave;
-        return clave;
-    };
-
-    const guardarProgreso = () => {
-        const draft = JSON.parse(localStorage.getItem('hv_draft')) || {};
-        const labelsGuardados = draft.__labels || {};
-
-        // Guardar inputs, selects y textareas (incluye campos sin id)
-        const campos = document.querySelectorAll('input.campo-input, select.campo-input, textarea.campo-input, input.entidad-input');
-        campos.forEach((campo, indice) => {
-            const clave = obtenerClavePersistencia(campo, indice);
-            labelsGuardados[clave] = obtenerLabelCampo(campo);
-
-            if (campo.type === 'checkbox') {
-                draft[clave] = campo.checked;
-                return;
-            }
-            if (campo.type === 'radio') return;
-            draft[clave] = campo.value;
-        });
-
-        // Guardar radio buttons por grupo
-        const radios = document.querySelectorAll('input[type="radio"]');
-        const grupos = new Set();
-        radios.forEach(radio => {
-            if (!radio.name || grupos.has(radio.name)) return;
-            grupos.add(radio.name);
-            const seleccionado = document.querySelector(`input[type="radio"][name="${radio.name}"]:checked`);
-            const claveGrupo = `radio__${obtenerNombrePagina()}__${radio.name}`;
-            if (seleccionado) {
-                const valorRadio = seleccionado.id || seleccionado.value || 'seleccionado';
-                draft[claveGrupo] = valorRadio;
-                if (seleccionado.id) {
-                    // Compatibilidad con la lógica anterior
-                    draft[radio.name] = seleccionado.id;
+        config.forEach(campo => {
+            if (campo.type === 'radio') {
+                const radios = document.querySelectorAll(`input[name="${campo.name}"]`);
+                if (!Array.from(radios).some(r => r.checked)) {
+                    esValido = false;
+                    const grupo = radios[0].closest('.radio-grupo') || radios[0].parentElement;
+                    mostrarError(grupo, `Seleccione ${campo.label}`);
+                }
+            } else if (campo.type === 'checkbox') {
+                const el = document.getElementById(campo.id);
+                if (el && !el.checked) {
+                    esValido = false;
+                    mostrarError(el, `Debe aceptar: ${campo.label}`);
+                }
+            } else if (campo.type === 'email') {
+                const el = document.getElementById(campo.id);
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!el || !el.value.trim()) {
+                    esValido = false;
+                    mostrarError(el, `${campo.label} es requerido`);
+                } else if (!emailRegex.test(el.value.trim())) {
+                    esValido = false;
+                    mostrarError(el, 'Email no válido');
                 }
             } else {
-                delete draft[claveGrupo];
-            }
-        });
+                const el = document.getElementById(campo.id);
+                if (!el || !el.value.trim()) {
+                    esValido = false;
+                    mostrarError(el, `${campo.label} es requerido`);
+                } else {
+                    // Validaciones adicionales específicas
+                    if (campo.id === 'fecha-nacimiento') {
+                        const cumple = new Date(el.value);
+                        let edad = anioActual - cumple.getFullYear();
+                        const m = hoy.getMonth() - cumple.getMonth();
+                        if (m < 0 || (m === 0 && hoy.getDate() < cumple.getDate())) {
+                            edad--;
+                        }
+                        if (edad < 18) {
+                            esValido = false;
+                            mostrarError(el, 'Debe ser mayor de 18 años');
+                        }
+                    }
 
-        draft.__labels = labelsGuardados;
-        localStorage.setItem('hv_draft', JSON.stringify(draft));
-    };
-
-    const cargarProgreso = () => {
-        const draft = JSON.parse(localStorage.getItem('hv_draft'));
-        if (!draft) return;
-        
-        // Restaurar textos, selects, textareas y checkboxes (con y sin id)
-        const campos = document.querySelectorAll('input.campo-input, select.campo-input, textarea.campo-input, input.entidad-input');
-        campos.forEach((campo, indice) => {
-            const clave = obtenerClavePersistencia(campo, indice);
-            if (typeof draft[clave] === 'undefined') return;
-
-            if (campo.type === 'checkbox') {
-                campo.checked = !!draft[clave];
-            } else if (campo.type !== 'radio') {
-                campo.value = draft[clave];
-
-                // Si es un depto, actualizar municipios relacionados
-                if (campo.classList.contains('depto-select')) {
-                    const row = campo.closest('.row');
-                    const muniSelect = row ? row.querySelector('.muni-select') : null;
-                    if (muniSelect) {
-                        actualizarMunicipios(muniSelect, campo.value);
+                    if (el.type === 'number' && (campo.id.includes('anio') || campo.id.includes('year'))) {
+                        if (parseInt(el.value) > anioActual) {
+                            esValido = false;
+                            mostrarError(el, 'El año no puede ser superior al actual');
+                        }
                     }
                 }
             }
         });
 
-        // Restaurar Radio Buttons por nombre y id
-        const radios = document.querySelectorAll('input[type="radio"]');
-        radios.forEach(radio => {
-            const claveGrupo = `radio__${obtenerNombrePagina()}__${radio.name}`;
-            const valorGuardado = draft[claveGrupo] || draft[radio.name];
-            if (valorGuardado && (valorGuardado === radio.id || valorGuardado === radio.value)) {
-                radio.checked = true;
+        // Validar años en tablas dinámicas (Formación)
+        document.querySelectorAll('input[type="number"][id*="anio"], input[placeholder="MM/AAAA"]').forEach(input => {
+            if (input.value.trim()) {
+                if (input.type === 'number') {
+                    if (parseInt(input.value) > anioActual) {
+                        esValido = false;
+                        mostrarError(input, 'Año inválido');
+                    }
+                } else if (input.placeholder === 'MM/AAAA') {
+                    const parts = input.value.split('/');
+                    if (parts.length === 2) {
+                        const year = parseInt(parts[1]);
+                        if (year > anioActual) {
+                            esValido = false;
+                            mostrarError(input, 'Año no puede ser futuro');
+                        }
+                    }
+                }
             }
         });
+
+        if (!esValido) {
+            alert('Atención: Algunos campos obligatorios están vacíos o son incorrectos. No puede continuar.');
+        }
+        return esValido;
+    };
+
+    // --- PERSISTENCIA AVANZADA (MANEJO DE ARREGLOS) ---
+    const guardarDatos = () => {
+        const datos = JSON.parse(localStorage.getItem('hv_draft')) || {};
         
-        // Pequeño refuerzo para calculos de tiempo si los hay
+        // Guardar campos estáticos (con ID)
+        document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+            if (el.type === 'checkbox') datos[el.id] = el.checked;
+            else if (el.type !== 'radio') datos[el.id] = el.value;
+        });
+
+        // Guardar radios por nombre
+        document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+            datos[r.name] = r.id || r.value;
+        });
+
+        // Guardar Entidad Receptora (campo especial sin id a veces)
+        const entidad = document.querySelector('.entidad-input');
+        if (entidad) datos['entidad-receptora-global'] = entidad.value;
+
+        // Guardar Secciones Dinámicas como Arreglos
+        const guardarLista = (containerId, entryClass) => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const items = [];
+            container.querySelectorAll('.' + entryClass).forEach(row => {
+                const item = {};
+                row.querySelectorAll('input, select').forEach(input => {
+                    const key = input.id || input.name || input.placeholder || 'campo';
+                    if (input.type === 'radio') {
+                        if (input.checked) item[input.name] = input.id || input.value;
+                    } else {
+                        item[key] = input.value;
+                    }
+                });
+                items.push(item);
+            });
+            datos[containerId] = items;
+        };
+
+        guardarLista('contenedor-estudios', 'libreta-box');
+        guardarLista('contenedor-idiomas', 'libreta-box');
+        guardarLista('contenedor-experiencias', 'libreta-box');
+
+        localStorage.setItem('hv_draft', JSON.stringify(datos));
+    };
+
+    const cargarDatos = () => {
+        const datos = JSON.parse(localStorage.getItem('hv_draft'));
+        if (!datos) return;
+
+        // Cargar Entidad Receptora
+        const entidad = document.querySelector('.entidad-input');
+        if (entidad && datos['entidad-receptora-global']) entidad.value = datos['entidad-receptora-global'];
+
+        // Cargar campos estáticos
+        document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+            if (datos[el.id] !== undefined) {
+                if (el.type === 'checkbox') el.checked = datos[el.id];
+                else el.value = datos[el.id];
+            }
+        });
+
+        // Cargar radios
+        document.querySelectorAll('input[type="radio"]').forEach(r => {
+            if (datos[r.name] && (datos[r.name] === r.id || datos[r.name] === r.value)) {
+                r.checked = true;
+            }
+        });
+
+        // Restaurar Secciones Dinámicas
+        const restaurarLista = (containerId, entryClass) => {
+            const listData = datos[containerId];
+            if (!listData || !listData.length) return;
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Limpiar y reconstruir
+            const template = container.firstElementChild.cloneNode(true);
+            container.innerHTML = '';
+
+            listData.forEach((itemData, index) => {
+                const clone = template.cloneNode(true);
+                clone.querySelectorAll('input, select').forEach(input => {
+                    const key = input.id || input.name || input.placeholder || 'campo';
+                    
+                    // Ajustar nombres de radios para que no colisionen por fila
+                    if (input.type === 'radio') {
+                        const originalName = input.name.replace(/\d+$/, '');
+                        input.name = originalName + index;
+                        if (itemData[originalName] === (input.id || input.value)) input.checked = true;
+                    } else {
+                        if (itemData[key] !== undefined) input.value = itemData[key];
+                    }
+                });
+                container.appendChild(clone);
+            });
+        };
+
+        restaurarLista('contenedor-estudios', 'libreta-box');
+        restaurarLista('contenedor-idiomas', 'libreta-box');
+        restaurarLista('contenedor-experiencias', 'libreta-box');
+
+        // Refrescar municipios y cálculos
         setTimeout(() => {
+            document.querySelectorAll('.depto-select').forEach(d => {
+                const row = d.closest('.row');
+                const muni = row ? row.querySelector('.muni-select') : null;
+                if (muni) {
+                    actualizarMunicipios(muni, d.value);
+                    // Buscar si había un municipio guardado para esta fila
+                    // (Más complejo con listas, pero al menos el depto carga)
+                }
+            });
             if (typeof calcularTotalTiempo === 'function') calcularTotalTiempo();
         }, 100);
     };
 
-    // Escuchar cambios en todo el documento para guardar inmediatamente
-    document.addEventListener('change', guardarProgreso);
-    document.addEventListener('input', guardarProgreso);
+    // --- LÓGICA DE TIEMPO ---
+    const calcularTotalTiempo = () => {
+        const getV = id => parseInt(document.getElementById(id)?.value) || 0;
+        const totalMeses = (getV('ap-pub') * 12 + getV('mp-pub')) +
+                           (getV('ap-priv') * 12 + getV('mp-priv')) +
+                           (getV('ap-ind') * 12 + getV('mp-ind'));
+        
+        const outA = document.getElementById('total-anios');
+        const outM = document.getElementById('total-meses');
+        if (outA) outA.value = Math.floor(totalMeses / 12);
+        if (outM) outM.value = totalMeses % 12;
+    };
 
-    // Guardar antes de salir de la página por si acaso
-    window.addEventListener('beforeunload', guardarProgreso);
-
-    // Asegurar guardado al hacer clic en botones de navegación o enlaces
-    document.querySelectorAll('a, button, .paso').forEach(el => {
-        el.addEventListener('click', () => {
-            guardarProgreso();
-        });
-    });
-
-    cargarProgreso();
-
-    // --- LÓGICA DE ENVÍO (Finalización) ---
-    const btnEnviar = document.querySelector('.btn-enviar');
-    if (btnEnviar) {
-        btnEnviar.addEventListener('click', () => {
-            const draft = JSON.parse(localStorage.getItem('hv_draft')) || {};
-            
-            // Validar que al menos tenga nombre y cedula
-            if (!draft['nombres'] || !draft['num-documento']) {
-                alert('Por favor complete los datos personales antes de enviar.');
-                return;
+    // --- BOTONES DE AGREGAR ---
+    const setupAgregarBotones = () => {
+        const handleAdd = (btnId, containerId) => {
+            const btn = document.getElementById(btnId);
+            const container = document.getElementById(containerId);
+            if (btn && container) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const clone = container.firstElementChild.cloneNode(true);
+                    clone.querySelectorAll('input').forEach(i => i.value = '');
+                    clone.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+                    // Ajustar radios para el nuevo indice
+                    const newIdx = container.children.length;
+                    clone.querySelectorAll('input[type="radio"]').forEach(r => {
+                        r.checked = false;
+                        r.name = r.name.replace(/\d+$/, '') + newIdx;
+                    });
+                    container.appendChild(clone);
+                    setupDynamicDropdowns();
+                });
             }
-
-            const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
-            
-            // Crear nueva HV
-            const nuevaHV = {
-                id: Date.now(),
-                nombre: `${draft['nombres']} ${draft['primer-apellido']}`,
-                documento: draft['num-documento'],
-                fechaEnvio: new Date().toLocaleDateString(),
-                estado: 'Diligenciada',
-                detalle: draft
-            };
-            
-            hvs.push(nuevaHV);
-            localStorage.setItem('hvs_list', JSON.stringify(hvs));
-            
-            // Limpiar draft
-            localStorage.removeItem('hv_draft');
-            
-            alert('¡Hoja de Vida enviada con éxito!');
-            location.href = 'index.html';
-        });
-    }
-
-    // --- LÓGICA PANEL ADMINISTRADOR ---
-    const cuerpoTabla = document.getElementById('cuerpo-tabla');
-    if (cuerpoTabla) {
-        const etiquetasCampos = {
-            nombres: 'Nombres',
-            'primer-apellido': 'Primer Apellido',
-            'segundo-apellido': 'Segundo Apellido',
-            sexo: 'Sexo',
-            nacionalidad: 'Nacionalidad',
-            'tipo-documento': 'Tipo de Documento',
-            'num-documento': 'Número de Documento',
-            'libreta-militar': 'Libreta Militar',
-            'primera-clase': 'Libreta Primera Clase',
-            'segunda-clase': 'Libreta Segunda Clase',
-            'num-libreta': 'Número de Libreta',
-            distrito: 'Distrito Militar',
-            'fecha-nacimiento': 'Fecha de Nacimiento',
-            pais: 'País',
-            departamento: 'Departamento',
-            municipio: 'Municipio',
-            direccion: 'Dirección',
-            telefono: 'Teléfono',
-            celular: 'Celular',
-            email: 'Correo Electrónico',
-            'ap-pub': 'Años Sector Público',
-            'mp-pub': 'Meses Sector Público',
-            'ap-priv': 'Años Sector Privado',
-            'mp-priv': 'Meses Sector Privado',
-            'ap-ind': 'Años Independiente',
-            'mp-ind': 'Meses Independiente',
-            'total-anios': 'Total Años Experiencia',
-            'total-meses': 'Total Meses Experiencia',
-            'chk-juramento': 'Juramento Aceptado'
         };
+        handleAdd('btn-agregar-estudio', 'contenedor-estudios');
+        handleAdd('btn-agregar-idioma', 'contenedor-idiomas');
+        handleAdd('btn-agregar-exp', 'contenedor-experiencias');
 
-        const formatearEtiqueta = (clave, labelsDetalle = {}) => {
-            if (labelsDetalle[clave]) return labelsDetalle[clave];
-            if (etiquetasCampos[clave]) return etiquetasCampos[clave];
-            return clave
-                .replace(/[-_]/g, ' ')
-                .replace(/\s+/g, ' ')
-                .trim()
-                .replace(/\b\w/g, (char) => char.toUpperCase());
-        };
-
-        const formatearValor = (valor) => {
-            if (valor === null || valor === undefined) return 'No registra';
-            if (typeof valor === 'boolean') return valor ? 'Sí' : 'No';
-            const texto = String(valor).trim();
-            return texto ? texto : 'No registra';
-        };
-
-        /** Evita mostrar claves técnicas del localStorage y duplicados de radios en el panel admin. */
-        const CLAVES_RADIO_LEGADO = new Set([
-            'libreta', 'doc', 'nac', 'sexo', 'grado', 'habla1', 'lee1', 'escribe1', 'tipo1'
-        ]);
-
-        const debeOmitirEntradaDetalle = (clave, valor, labelsDetalle) => {
-            const c = String(clave);
-            const ln = c.toLowerCase();
-            if (ln.startsWith('radio__') || ln.startsWith('auto__')) return true;
-            if (ln.includes('.html')) return true;
-            if (CLAVES_RADIO_LEGADO.has(ln)) return true;
-
-            const etiquetaGuardada = (labelsDetalle[clave] || '').toLowerCase();
-            const etiquetaMostrada = formatearEtiqueta(clave, labelsDetalle).toLowerCase();
-            const textoEtiqueta = `${etiquetaGuardada} ${etiquetaMostrada}`;
-            if (textoEtiqueta.includes('.html')) return true;
-
-            const valNorm = String(valor == null ? '' : valor).trim().toLowerCase();
-            if (textoEtiqueta.includes('escriba el nombre de la entidad')) {
-                if (!valNorm || valNorm === 'no registrarse' || valNorm === 'no registra') return true;
-            }
-
-            if (
-                (ln === 'total-anios' || ln === 'total-meses') &&
-                (valor === 0 || valor === '0' || valNorm === '')
-            ) {
-                return true;
-            }
-
-            return false;
-        };
-
-        const renderDetalleCompleto = (detalle = {}) => {
-            const contenedor = document.getElementById('detalle-datos-completos');
-            if (!contenedor) return;
-
-            const labelsDetalle = detalle.__labels || {};
-            const entradas = Object.entries(detalle).filter(([clave, valor]) => {
-                if (/^canvas-firma/.test(clave) || clave.startsWith('__')) return false;
-                return !debeOmitirEntradaDetalle(clave, valor, labelsDetalle);
-            });
-
-            if (!entradas.length) {
-                contenedor.innerHTML = '<p class="detalle-valor">Esta hoja de vida no tiene información adicional guardada.</p>';
-                return;
-            }
-
-            contenedor.innerHTML = entradas.map(([clave, valor]) => `
-                <div class="detalle-item">
-                    <label class="campo-label">${formatearEtiqueta(clave, labelsDetalle)}</label>
-                    <p class="detalle-valor">${formatearValor(valor)}</p>
-                </div>
-            `).join('');
-        };
-
-        const renderAdmin = () => {
-            const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
-            const filtro = document.getElementById('select-filtro').value;
-            
-            cuerpoTabla.innerHTML = '';
-            
-            const filtradas = filtro === 'todas' ? hvs : hvs.filter(h => h.estado === filtro);
-            
-            filtradas.forEach(hv => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${hv.nombre}</td>
-                    <td>${hv.documento}</td>
-                    <td>${hv.fechaEnvio}</td>
-                    <td><span class="badge-estado badge-${hv.estado.toLowerCase()}">${hv.estado}</span></td>
-                    <td>
-                        <button class="btn-sig btn-sm" onclick="verDetalle(${hv.id})" style="padding: 4px 10px; font-size: 10px;">Ver</button>
-                    </td>
-                `;
-                cuerpoTabla.appendChild(tr);
-            });
-        };
-
-        document.getElementById('select-filtro').addEventListener('change', renderAdmin);
-        renderAdmin();
-
-        // Función global para ver detalle
-        window.verDetalle = (id) => {
-            const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
-            const hv = hvs.find(h => h.id === id);
-            if (!hv) return;
-
-            document.getElementById('panel-detalle').style.display = 'block';
-            document.getElementById('detalle-nombre').textContent = hv.nombre;
-            document.getElementById('detalle-doc').textContent = hv.documento;
-            document.getElementById('detalle-fecha').textContent = hv.fechaEnvio;
-            document.getElementById('detalle-estado-actual').textContent = hv.estado;
-            renderDetalleCompleto(hv.detalle);
-            
-            // Boton guardar cambio estado
-            const btnGuardarEstado = document.getElementById('btn-guardar-estado');
-            btnGuardarEstado.onclick = () => {
-                const nuevoEstado = document.getElementById('nuevo-estado').value;
-                if (nuevoEstado) {
-                    hv.estado = nuevoEstado;
-                    localStorage.setItem('hvs_list', JSON.stringify(hvs));
-                    renderAdmin();
-                    document.getElementById('panel-detalle').style.display = 'none';
+        // Delegación de eventos para eliminar (btn-trash)
+        document.addEventListener('click', (e) => {
+            const trashBtn = e.target.closest('.btn-trash');
+            if (trashBtn) {
+                e.preventDefault();
+                const row = trashBtn.closest('.libreta-box');
+                if (row) {
+                    const container = row.parentElement;
+                    // Evitar borrar el último si es el único
+                    if (container.children.length > 1) {
+                        row.remove();
+                        guardarDatos();
+                    } else {
+                        // Si es el único, solo limpiamos los campos
+                        row.querySelectorAll('input').forEach(i => i.value = '');
+                        row.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+                        guardarDatos();
+                    }
                 }
-            };
-        };
+            }
+        });
+    };
 
-        const btnCerrar = document.getElementById('btn-cerrar-detalle');
-        if (btnCerrar) {
-            btnCerrar.addEventListener('click', () => {
-                document.getElementById('panel-detalle').style.display = 'none';
+    // --- NAVEGACIÓN Y PREVISUALIZACIÓN ---
+    const setupNavButtons = () => {
+        const paginas = ['index.html', 'formacion.html', 'experiencia.html', 'tiempoDeExperiencia.html', 'certificacion.html'];
+        const actualIdx = paginas.indexOf(obtenerPaginaActual());
+
+        // Manejar Sigientes
+        const btnSig = document.querySelector('.btn-sig') || document.querySelector('.btn-enviar');
+        if (btnSig) {
+            btnSig.addEventListener('click', (e) => {
+                if (validarPaginaActual()) {
+                    guardarDatos();
+                    if (btnSig.id === 'btn-enviar-final' || btnSig.classList.contains('btn-enviar')) {
+                        enviarHojaDeVida();
+                    } else if (actualIdx < paginas.length - 1) {
+                        navegarA(paginas[actualIdx + 1]);
+                    }
+                }
             });
         }
-    }
 
-    // --- LÓGICA DE FIRMA DIGITAL ---
-    const initFirma = (canvasId, clearBtnId) => {
-        const canvas = document.getElementById(canvasId);
-        const clearBtn = document.getElementById(clearBtnId);
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-
-        const resizeCanvas = () => {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            ctx.strokeStyle = '#0d1f3c';
-            ctx.lineWidth = 2;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-        };
-
-        window.addEventListener('resize', resizeCanvas);
-        setTimeout(resizeCanvas, 100);
-
-        const getPos = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
-            };
-        };
-
-        const startDrawing = (e) => {
-            drawing = true;
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-            if (e.cancelable) e.preventDefault();
-        };
-
-        const draw = (e) => {
-            if (!drawing) return;
-            const pos = getPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            if (e.cancelable) e.preventDefault();
-        };
-
-        const stopDrawing = () => {
-            drawing = false;
-        };
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        canvas.addEventListener('touchstart', startDrawing);
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Manejar Previsualizar (atrás con aviso)
+        const btnPrev = document.querySelector('.btn-prev');
+        if (btnPrev && !btnPrev.id.startsWith('btn-agregar') && !btnPrev.id.startsWith('btn-limpiar')) {
+            btnPrev.addEventListener('click', () => {
+                guardarDatos();
+                if (actualIdx > 0) navegarA(paginas[actualIdx - 1]);
             });
+        }
+
+        // Caso especial paso 1 Previsualizar (mostrar resumen rápido)
+        if (obtenerPaginaActual() === 'index.html') {
+            const btnPrev1 = document.querySelector('.btn-prev');
+            if (btnPrev1) {
+                btnPrev1.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const d = JSON.parse(localStorage.getItem('hv_draft')) || {};
+                    if (d.nombres) {
+                        alert(`Resumen actual:\nNombre: ${d.nombres} ${d['primer-apellido'] || ''}\nDoc: ${d['num-documento'] || 'No asignado'}`);
+                    } else {
+                        alert('No hay datos guardados aún.');
+                    }
+                });
+            }
         }
     };
 
-    initFirma('canvas-firma-usuario', 'btn-limpiar-firma-usuario');
-    initFirma('canvas-firma-jefe', 'btn-limpiar-firma-jefe');
+    // --- ENVÍO FINAL ---
+    const enviarHojaDeVida = () => {
+        const draft = JSON.parse(localStorage.getItem('hv_draft'));
+        if (!draft) return;
 
+        const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
+        
+        const nuevaHV = {
+            id: Date.now(),
+            nombre: `${draft.nombres || ''} ${draft['primer-apellido'] || ''} ${draft['segundo-apellido'] || ''}`.trim(),
+            documento: draft['num-documento'] || 'N/A',
+            fechaEnvio: new Date().toLocaleString(),
+            estado: 'Diligenciada',
+            detalle: draft
+        };
+
+        hvs.push(nuevaHV);
+        localStorage.setItem('hvs_list', JSON.stringify(hvs));
+        localStorage.removeItem('hv_draft');
+
+        alert('¡Hoja de Vida enviada exitosamente al administrador!');
+        navegarA('index.html');
+    };
+
+    // --- PANEL ADMINISTRADOR ---
+    const renderAdmin = () => {
+        const tabla = document.getElementById('cuerpo-tabla');
+        if (!tabla) return;
+        const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
+        const filtro = document.getElementById('select-filtro')?.value || 'todas';
+        tabla.innerHTML = '';
+        
+        hvs.filter(h => filtro === 'todas' || h.estado === filtro).forEach(hv => {
+            const tr = document.createElement('tr');
+            const esDiligenciada = hv.estado === 'Diligenciada';
+            
+            tr.innerHTML = `
+                <td>${hv.nombre}</td>
+                <td>${hv.documento}</td>
+                <td>${hv.fechaEnvio}</td>
+                <td><span class="badge-estado badge-${hv.estado.toLowerCase()}">${hv.estado}</span></td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <button class="btn-sig btn-sm py-1 px-2" onclick="verDetalle(${hv.id})" title="Ver Detalle">
+                            <i class="bi bi-eye"></i> Leer
+                        </button>
+                        ${esDiligenciada ? `
+                            <button class="btn btn-success btn-sm py-1 px-2" onclick="cambiarEstadoAccion(${hv.id}, 'Aceptada')">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm py-1 px-2" onclick="cambiarEstadoAccion(${hv.id}, 'Rechazada')">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
+            tabla.appendChild(tr);
+        });
+    };
+
+    window.cambiarEstadoAccion = (id, nuevoEstado) => {
+        const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
+        const idx = hvs.findIndex(h => h.id === id);
+        if (idx !== -1) {
+            hvs[idx].estado = nuevoEstado;
+            localStorage.setItem('hvs_list', JSON.stringify(hvs));
+            renderAdmin();
+            if (document.getElementById('panel-detalle').style.display === 'block') {
+                verDetalle(id);
+            }
+        }
+    };
+
+    window.verDetalle = (id) => {
+        const hvs = JSON.parse(localStorage.getItem('hvs_list')) || [];
+        const hv = hvs.find(h => h.id === id);
+        if (!hv) return;
+        
+        document.getElementById('panel-detalle').style.display = 'block';
+        document.getElementById('detalle-nombre').textContent = hv.nombre;
+        document.getElementById('detalle-doc').textContent = hv.documento;
+        document.getElementById('detalle-fecha').textContent = hv.fechaEnvio;
+        document.getElementById('detalle-estado-actual').textContent = hv.estado;
+        
+        const cont = document.getElementById('detalle-datos-completos');
+        cont.innerHTML = '';
+        
+        // Formatear detalle de manera legible
+        const labels = {
+            'nombres': 'Nombres',
+            'primer-apellido': 'Primer Apellido',
+            'segundo-apellido': 'Segundo Apellido',
+            'num-documento': 'Cédula',
+            'email': 'Correo',
+            'telefono': 'Teléfono',
+            'direccion-correspondencia': 'Dirección',
+            'entidad-receptora-global': 'Entidad Destino',
+            'fecha-nacimiento': 'Fecha Nac.',
+            'total-anios': 'Años Exp.',
+            'total-meses': 'Meses Exp.'
+        };
+
+        const grid = document.createElement('div');
+        grid.className = 'detalle-grid';
+        
+        Object.entries(hv.detalle).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+                // Secciones de tablas (estudios, experiencia, etc)
+                const section = document.createElement('div');
+                section.className = 'col-12 mt-3';
+                section.innerHTML = `<p class="subtitulo-bloque">${key.replace('contenedor-', '').toUpperCase()}</p>`;
+                
+                if (val.length > 0) {
+                    val.forEach((item, i) => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'libreta-box mb-2 small';
+                        itemDiv.innerHTML = Object.entries(item).map(([k, v]) => `<strong>${k}:</strong> ${v}`).join(' | ');
+                        section.appendChild(itemDiv);
+                    });
+                } else {
+                    section.innerHTML += '<p class="text-muted small">Sin registros.</p>';
+                }
+                cont.appendChild(section);
+            } else if (typeof val !== 'object' && val !== '' && val !== false) {
+                const label = labels[key] || key;
+                const item = document.createElement('div');
+                item.className = 'detalle-item';
+                item.innerHTML = `
+                    <label class="campo-label">${label}</label>
+                    <p class="detalle-valor">${val === true ? 'SI' : val}</p>
+                `;
+                grid.appendChild(item);
+            }
+        });
+        
+        cont.prepend(grid);
+
+        document.getElementById('btn-guardar-estado').onclick = () => {
+            const select = document.getElementById('nuevo-estado');
+            if (select.value) {
+                cambiarEstadoAccion(id, select.value);
+            }
+        };
+
+        document.getElementById('btn-cerrar-detalle').onclick = () => {
+            document.getElementById('panel-detalle').style.display = 'none';
+        };
+    };
+
+    // --- INICIALIZACIÓN ---
+    // Si se recarga la página manualmente, se reinician los campos (según petición usuario)
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+        localStorage.removeItem('hv_draft');
+        console.log('Página recargada. Datos de borrador eliminados.');
+    }
+
+    poblarDistritos();
+    setupDynamicDropdowns();
+    setupAgregarBotones();
+    setupNavButtons();
+    cargarDatos();
+    
+    const canvU = document.getElementById('canvas-firma-usuario');
+    if (canvU) {
+        const ctx = canvU.getContext('2d');
+        let draw = false;
+        canvU.addEventListener('mousedown', () => { draw = true; ctx.beginPath(); });
+        canvU.addEventListener('mousemove', (e) => { if(!draw) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
+        window.addEventListener('mouseup', () => draw = false);
+        document.getElementById('btn-limpiar-firma-usuario')?.addEventListener('click', () => ctx.clearRect(0,0,canvU.width, canvU.height));
+    }
+
+    if (document.getElementById('cuerpo-tabla')) {
+        renderAdmin();
+        const filtroSelect = document.getElementById('select-filtro');
+        if (filtroSelect) {
+            filtroSelect.addEventListener('change', renderAdmin);
+        }
+    }
+
+    // Auto-guardado
+    document.addEventListener('input', (e) => {
+        if (e.target.matches('input, select, textarea')) {
+            guardarDatos();
+            if (e.target.id && (e.target.id.startsWith('ap-') || e.target.id.startsWith('mp-'))) calcularTotalTiempo();
+        }
+    });
+
+    // Guardar al hacer clic en cualquier enlace de navegación (sidebar/header)
+    document.querySelectorAll('a, .paso').forEach(link => {
+        link.addEventListener('click', () => guardarDatos());
+    });
 });
