@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'cargo-actual', label: 'Cargo o Contrato Actual' }
         ],
         'certificacion.html': [
-            { id: 'chk-juramento', label: 'Aceptación de juramento', type: 'checkbox' }
+            { id: 'chk-juramento', label: 'Aceptación de juramento', type: 'checkbox' },
+            { id: 'nombre-jefe', label: 'Nombre Jefe de Personal' }
         ]
     };
 
@@ -456,6 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
             documento: draft['num-documento'] || 'N/A',
             fechaEnvio: new Date().toLocaleString(),
             estado: 'Diligenciada',
+            firmaUsuario: document.getElementById('canvas-firma-usuario')?.toDataURL() || null,
+            firmaJefe: document.getElementById('canvas-firma-jefe')?.toDataURL() || null,
             detalle: draft
         };
 
@@ -581,6 +584,38 @@ document.addEventListener('DOMContentLoaded', () => {
         
         cont.prepend(grid);
 
+        // Mostrar firmas si existen
+        const rowFirmas = document.createElement('div');
+        rowFirmas.className = 'row mt-4 pt-3';
+        rowFirmas.style.borderTop = '1px dashed #ddd';
+        
+        if (hv.firmaUsuario) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 mb-3';
+            col.innerHTML = `
+                <label class="campo-label">Firma del Servidor / Contratista</label>
+                <div style="background: #f8f9fa; border-radius: 4px; padding: 10px; text-align: center;">
+                    <img src="${hv.firmaUsuario}" style="max-width: 100%; height: 80px; object-fit: contain;">
+                </div>
+            `;
+            rowFirmas.appendChild(col);
+        }
+        if (hv.firmaJefe) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 mb-3';
+            col.innerHTML = `
+                <label class="campo-label">Firma del Jefe de Personal</label>
+                <div style="background: #f8f9fa; border-radius: 4px; padding: 10px; text-align: center;">
+                    <img src="${hv.firmaJefe}" style="max-width: 100%; height: 80px; object-fit: contain;">
+                </div>
+            `;
+            rowFirmas.appendChild(col);
+        }
+        
+        if (hv.firmaUsuario || hv.firmaJefe) {
+            cont.appendChild(rowFirmas);
+        }
+
         document.getElementById('btn-guardar-estado').onclick = () => {
             const select = document.getElementById('nuevo-estado');
             if (select.value) {
@@ -606,15 +641,72 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNavButtons();
     cargarDatos();
     
-    const canvU = document.getElementById('canvas-firma-usuario');
-    if (canvU) {
-        const ctx = canvU.getContext('2d');
-        let draw = false;
-        canvU.addEventListener('mousedown', () => { draw = true; ctx.beginPath(); });
-        canvU.addEventListener('mousemove', (e) => { if(!draw) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
-        window.addEventListener('mouseup', () => draw = false);
-        document.getElementById('btn-limpiar-firma-usuario')?.addEventListener('click', () => ctx.clearRect(0,0,canvU.width, canvU.height));
-    }
+    const setupCanvas = (canvasId, clearBtnId) => {
+        const canv = document.getElementById(canvasId);
+        if (canv) {
+            const ctx = canv.getContext('2d');
+            
+            // Calibración inicial: ajustar resolución interna al tamaño visible
+            const ajustarResolucion = () => {
+                const rect = canv.getBoundingClientRect();
+                if (rect.width > 0) {
+                    canv.width = rect.width;
+                    canv.height = rect.height || 100;
+                }
+            };
+            ajustarResolucion();
+            window.addEventListener('resize', ajustarResolucion);
+
+            let drawing = false;
+
+            const getPos = (e) => {
+                const rect = canv.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            };
+
+            const start = (e) => {
+                drawing = true;
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                if (e.cancelable) e.preventDefault();
+            };
+
+            const move = (e) => {
+                if (!drawing) return;
+                const pos = getPos(e);
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#0d1f3c';
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                if (e.cancelable) e.preventDefault();
+            };
+
+            const stop = () => { drawing = false; };
+
+            canv.addEventListener('mousedown', start);
+            canv.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', stop);
+
+            canv.addEventListener('touchstart', start, { passive: false });
+            canv.addEventListener('touchmove', move, { passive: false });
+            canv.addEventListener('touchend', stop);
+
+            document.getElementById(clearBtnId)?.addEventListener('click', () => {
+                ctx.clearRect(0, 0, canv.width, canv.height);
+            });
+        }
+    };
+
+    setupCanvas('canvas-firma-usuario', 'btn-limpiar-firma-usuario');
+    setupCanvas('canvas-firma-jefe', 'btn-limpiar-firma-jefe');
 
     if (document.getElementById('cuerpo-tabla')) {
         renderAdmin();
