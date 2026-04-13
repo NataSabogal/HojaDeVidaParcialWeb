@@ -533,8 +533,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const cont = document.getElementById('detalle-datos-completos');
         cont.innerHTML = '';
-        
-        // Formatear detalle de manera legible
+        cont.classList.remove('detalle-grid'); // Limpiar clases previas
+
         const labels = {
             'nombres': 'Nombres',
             'primer-apellido': 'Primer Apellido',
@@ -546,75 +546,97 @@ document.addEventListener('DOMContentLoaded', () => {
             'entidad-receptora-global': 'Entidad Destino',
             'fecha-nacimiento': 'Fecha Nac.',
             'total-anios': 'Años Exp.',
-            'total-meses': 'Meses Exp.'
+            'total-meses': 'Meses Exp.',
+            'num-libreta': 'Libreta Militar',
+            'distrito-militar': 'Distrito Militar',
+            'nac': 'Nacionalidad',
+            'doc': 'Tipo Doc.',
+            'sexo': 'Sexo'
         };
 
-        const grid = document.createElement('div');
-        grid.className = 'detalle-grid';
-        
+        // Crear Contenedor Principal
+        const mainRow = document.createElement('div');
+        mainRow.className = 'row g-4';
+
+        // --- COLUMNA IZQUIERDA (Datos Personales) ---
+        const leftCol = document.createElement('div');
+        leftCol.className = 'col-md-3 border-end';
+        leftCol.style.backgroundColor = '#fcfcfc';
+
         Object.entries(hv.detalle).forEach(([key, val]) => {
-            if (Array.isArray(val)) {
-                // Secciones de tablas (estudios, experiencia, etc)
-                const section = document.createElement('div');
-                section.className = 'col-12 mt-3';
-                section.innerHTML = `<p class="subtitulo-bloque">${key.replace('contenedor-', '').toUpperCase()}</p>`;
-                
-                if (val.length > 0) {
-                    val.forEach((item, i) => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = 'libreta-box mb-2 small';
-                        itemDiv.innerHTML = Object.entries(item).map(([k, v]) => `<strong>${k}:</strong> ${v}`).join(' | ');
-                        section.appendChild(itemDiv);
-                    });
-                } else {
-                    section.innerHTML += '<p class="text-muted small">Sin registros.</p>';
-                }
-                cont.appendChild(section);
-            } else if (typeof val !== 'object' && val !== '' && val !== false) {
-                const label = labels[key] || key;
+            if (!Array.isArray(val) && val !== '' && val !== false && !key.includes('firma')) {
                 const item = document.createElement('div');
-                item.className = 'detalle-item';
+                item.className = 'mb-3 border-bottom pb-2';
+                const labelText = labels[key] || key.toUpperCase().replace(/-/g, ' ');
                 item.innerHTML = `
-                    <label class="campo-label">${label}</label>
-                    <p class="detalle-valor">${val === true ? 'SI' : val}</p>
+                    <label class="campo-label" style="font-size: 9px; opacity: 0.7;">${labelText}</label>
+                    <p class="mb-0" style="font-size: 11px; font-weight: 600; color: #333;">${val === true ? 'SI' : val}</p>
                 `;
-                grid.appendChild(item);
+                leftCol.appendChild(item);
             }
         });
-        
-        cont.prepend(grid);
+        mainRow.appendChild(leftCol);
 
-        // Mostrar firmas si existen
-        const rowFirmas = document.createElement('div');
-        rowFirmas.className = 'row mt-4 pt-3';
-        rowFirmas.style.borderTop = '1px dashed #ddd';
-        
-        if (hv.firmaUsuario) {
+        // --- COLUMNA DERECHA (Secciones y Firmas) ---
+        const rightCol = document.createElement('div');
+        rightCol.className = 'col-md-9';
+
+        // Fila para las Secciones Dinámicas
+        const sectionsRow = document.createElement('div');
+        sectionsRow.className = 'row mb-4';
+
+        const seccionesOrder = ['contenedor-estudios', 'contenedor-idiomas', 'contenedor-experiencias'];
+        const titulos = {
+            'contenedor-estudios': 'ESTUDIOS',
+            'contenedor-idiomas': 'IDIOMAS',
+            'contenedor-experiencias': 'EXPERIENCIAS'
+        };
+
+        seccionesOrder.forEach(key => {
+            const val = hv.detalle[key] || [];
             const col = document.createElement('div');
-            col.className = 'col-md-6 mb-3';
+            col.className = 'col-md-4';
+            col.innerHTML = `<p class="subtitulo-bloque" style="font-size: 10px; border-bottom: 2px solid #0d1f3c;">${titulos[key]}</p>`;
+
+            if (val.length > 0) {
+                val.forEach(item => {
+                    const box = document.createElement('div');
+                    box.className = 'libreta-box mb-2 p-2 small';
+                    box.style.fontSize = '10px';
+                    box.style.lineHeight = '1.4';
+                    box.innerHTML = Object.entries(item).map(([k, v]) => `<strong>${k}:</strong> ${v}`).join(' | ');
+                    col.appendChild(box);
+                });
+            } else {
+                col.innerHTML += '<p class="text-muted small">Sin registros.</p>';
+            }
+            sectionsRow.appendChild(col);
+        });
+        rightCol.appendChild(sectionsRow);
+
+        // Fila para Firmas (dentro del área derecha)
+        const signaturesRow = document.createElement('div');
+        signaturesRow.className = 'row border-top pt-3';
+        
+        const crearCajaFirma = (titulo, b64) => {
+            const col = document.createElement('div');
+            col.className = 'col-md-4';
             col.innerHTML = `
-                <label class="campo-label">Firma del Servidor / Contratista</label>
-                <div style="background: #f8f9fa; border-radius: 4px; padding: 10px; text-align: center;">
-                    <img src="${hv.firmaUsuario}" style="max-width: 100%; height: 80px; object-fit: contain;">
+                <label class="campo-label" style="font-size: 9px;">${titulo}</label>
+                <div style="background: #f8f9fa; border: 1px solid #eee; border-radius: 4px; padding: 5px; text-align: center;">
+                    ${b64 ? `<img src="${b64}" style="max-height: 50px; width: auto;">` : '<span class="text-muted" style="font-size: 9px;">No firmada</span>'}
                 </div>
             `;
-            rowFirmas.appendChild(col);
-        }
-        if (hv.firmaJefe) {
-            const col = document.createElement('div');
-            col.className = 'col-md-6 mb-3';
-            col.innerHTML = `
-                <label class="campo-label">Firma del Jefe de Personal</label>
-                <div style="background: #f8f9fa; border-radius: 4px; padding: 10px; text-align: center;">
-                    <img src="${hv.firmaJefe}" style="max-width: 100%; height: 80px; object-fit: contain;">
-                </div>
-            `;
-            rowFirmas.appendChild(col);
-        }
+            return col;
+        };
+
+        signaturesRow.appendChild(crearCajaFirma('FIRMA DEL SERVIDOR / CONTRATISTA', hv.firmaUsuario));
+        signaturesRow.appendChild(crearCajaFirma('FIRMA DEL JEFE DE PERSONAL', hv.firmaJefe));
         
-        if (hv.firmaUsuario || hv.firmaJefe) {
-            cont.appendChild(rowFirmas);
-        }
+        rightCol.appendChild(signaturesRow);
+        mainRow.appendChild(rightCol);
+
+        cont.appendChild(mainRow);
 
         document.getElementById('btn-guardar-estado').onclick = () => {
             const select = document.getElementById('nuevo-estado');
