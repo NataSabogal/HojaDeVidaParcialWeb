@@ -487,6 +487,8 @@ footer.pie-pagina {
     border-radius: 6px;
     cursor: crosshair;
     width: 100%;
+    max-width: 350px;
+    height: 80px;
     display: block;
     touch-action: none;
 }
