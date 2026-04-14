@@ -501,3 +501,13 @@ footer.pie-pagina {
     transform: scale(1.2);
     cursor: pointer;
 }
+
+.tabla-th {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #5a6272;
+    padding: 12px 8px !important;
+    display: table-cell !important; /* Asegura que la tabla sea horizontal */
+}
